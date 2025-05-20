@@ -20,7 +20,7 @@ library(GseaVis) # For nicer GSEA plot
 ## Raw data
 raw.data <- read.delim("../results/star_salmon/salmon.merged.gene_counts.tsv", check.names=FALSE, stringsAsFactors=FALSE,row.names="gene_id")
 ## Metadata
-metadata <- read.delim("organoid_pilot_metadata.txt",check.names=FALSE, stringsAsFactors=FALSE)
+metadata <- read.delim("input/organoid_pilot_metadata.txt",check.names=FALSE, stringsAsFactors=FALSE)
 ### View the metadata
 metadata
 ### Make "Condition" (wildtype or mutant) a factor
