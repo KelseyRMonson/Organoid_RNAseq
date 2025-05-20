@@ -68,7 +68,7 @@ res.sig$topDE <- as.factor(res.sig$topDE)
 
 res.sig %>% distinct(topDE) %>% pull()
 
-write.csv(res.sig, "TumorT_TumorTx_sig_filtered.csv")
+write.csv(res.sig, "output/Sig_DEGs_NoCre_vs_PlusCre_P53mut.csv")
 
 # Make nice colors
 ghibli_colors <- ghibli_palette("PonyoMedium", type = "discrete")
@@ -92,7 +92,7 @@ ggplot(data=res.sig, aes(x=logFC, y=-log10(FDR), fill=topDE, size=topDE, alpha=t
   scale_fill_manual(values = cols) + # Modify point colour
   scale_size_manual(values = sizes) + # Modify point size
   scale_alpha_manual(values = alphas) + # Modify point transparency
-  labs(title = "Gene expression changes comparing Lenvatinib-treated and untreated tumor tissue",
+  labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
        x = "log(fold change)",
        y = "-log10(adjusted P-value)",
        colour = "Expression \nchange") +
@@ -106,6 +106,8 @@ head(res.sig)
 # Good tutorial for customizing volcano: https://erikaduan.github.io/posts/2021-01-02-volcano-plots-with-ggplot2/ 
 
 # Highlighting specific genes on volcano
+
+## KM to pick up here tomorrow ## ----
 
 # Cytokine-cytokine receptor interaction pathway genes
 cytogenes <- c("ACVRL1","CXCL6","CSF3","CXCL8","CCL3L3","IL24","CXCR4","TNFRSF11B","CSF2RA","CXCL5","IL1RL1","CCL3","TNFSF11","CCL2","CCL18","IL10","IL11","IL33","TGFB2","CCL21","INHBA","IL17RB","BMP4","IL1A","CXCL10","CXCL11","IL6","CXCL12","IL1B","IL3RA","ACKR3")
