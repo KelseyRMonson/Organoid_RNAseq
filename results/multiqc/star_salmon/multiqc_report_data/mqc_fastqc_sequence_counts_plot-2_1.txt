@@ -1,5 +1,0 @@
-Sample	Unique Reads	Duplicate Reads
-Minus_cre_p53mut_1	30129946.0	49240372.0
-Minus_cre_p53mut_2	30670792.0	48699526.0
-Plus_cre_p53mut_1	23623576.0	38682213.0
-Plus_cre_p53mut_2	24136421.0	38169368.0

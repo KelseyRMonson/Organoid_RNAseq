@@ -1,3 +1,0 @@
-Sample	pe_sense	pe_antisense	failed
-Minus_cre_p53mut	0.4874	0.4816	0.031
-Plus_cre_p53mut	0.4772	0.476	0.0468

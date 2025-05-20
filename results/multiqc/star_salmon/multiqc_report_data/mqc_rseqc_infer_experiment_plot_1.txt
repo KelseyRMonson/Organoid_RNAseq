@@ -1,3 +1,0 @@
-Sample	Sense	Antisense	Undetermined
-Minus_cre_p53mut	48.74	48.16	3.1
-Plus_cre_p53mut	47.72	47.599999999999994	4.68

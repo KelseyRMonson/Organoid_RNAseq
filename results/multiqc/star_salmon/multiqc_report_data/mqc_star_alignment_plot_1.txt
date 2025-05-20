@@ -1,3 +1,0 @@
-Sample	Uniquely mapped	Mapped to multiple loci	Mapped to too many loci	Unmapped: too short	Unmapped: other
-Minus_cre_p53mut	70476518.0	4717218.0	62977.0	4010368.0	103237.0
-Plus_cre_p53mut	57603352.0	3072474.0	41410.0	1513798.0	74755.0

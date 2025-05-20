@@ -1,3 +1,0 @@
-Sample	Exonic	Intronic	Intergenic
-Minus_cre_p53mut	123116673.0	12479287.0	2120430.0
-Plus_cre_p53mut	102633462.0	8436754.0	1560126.0

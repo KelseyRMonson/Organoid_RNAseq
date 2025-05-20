@@ -1,3 +1,0 @@
-Sample	bam_file	reads_aligned	total_alignments	non_unique_alignments	reads_aligned_genes	ambiguous_alignments	not_aligned	5_3_bias	reads_aligned_exonic	reads_aligned_intronic	reads_aligned_intergenic	reads_aligned_overlapping_exon
-Minus_cre_p53mut	Minus_cre_p53mut.markdup.sorted.bam	75193719.0	166890112.0	25923510.0	123116673.0	3201838.0	0.0	1.06	123116673.0	12479287.0	2120430.0	4414280.0
-Plus_cre_p53mut	Plus_cre_p53mut.markdup.sorted.bam	60675806.0	132286204.0	17060356.0	102633462.0	2532662.0	0.0	1.09	102633462.0	8436754.0	1560126.0	3487726.0

@@ -1,3 +1,0 @@
-Sample	Passed Filter	Low Quality	Too Many N	Too Short	Too Long
-Minus_cre_p53mut	158740636.0	1702234.0	80548.0	3105842.0	0.0
-Plus_cre_p53mut	124611578.0	1792792.0	63888.0	6576606.0	0.0

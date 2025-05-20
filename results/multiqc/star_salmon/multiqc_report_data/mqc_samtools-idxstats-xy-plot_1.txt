@@ -1,3 +1,0 @@
-Sample	Chromosome X	Chromosome Y
-Minus_cre_p53mut	3956712.0	493528.0
-Plus_cre_p53mut	3213290.0	244980.0
