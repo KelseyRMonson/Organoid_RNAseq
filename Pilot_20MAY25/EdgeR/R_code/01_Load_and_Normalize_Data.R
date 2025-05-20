@@ -7,6 +7,13 @@ library(edgeR) # For differential expression calculation. We will create an edge
 # Read in the raw data and metadata ----
 ## Raw data
 raw.data <- read.delim("../results/star_salmon/salmon.merged.gene_counts.tsv", check.names=FALSE, stringsAsFactors=FALSE,row.names="gene_id")
+### View the raw data
+view(raw.data)
+str(raw.data)
+## Re-name the column headers to make downstream processing easier
+raw.data <- raw.data[c("gene_id","gene_name","Minus_cre_p53mut","Plus_cre_p53mut")]
+
+
 ## Metadata
 metadata <- read.delim("input/organoid_pilot_metadata.txt",check.names=FALSE, stringsAsFactors=FALSE)
 ### View the metadata
@@ -20,6 +27,10 @@ table(metadata)
 #### edgeR metadata is assigned by the order of the rows in the raw gene expression table
 #### This is fine for us because we want WT to be the reference, and WT was listed first
 #### We need to be cautious that we are setting the appropriate reference
+
+
+group <- factor(c("T","T_Tx"))
+
 
 # Create edgeR Object ----
 # Create edgeR list object (called DGEList)
