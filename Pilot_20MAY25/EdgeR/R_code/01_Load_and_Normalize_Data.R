@@ -2,19 +2,7 @@
 # Written by KM on 20MAY25
 
 # First load packages ----
-library(edgeR) # For differential expression calculation
-library(dplyr) # For general data manipulation
-library(AnnotationDbi) # To annotate with Entrez IDs
-library(org.Hs.eg.db) # To annotate with Entrez IDs
-library(GO.db) # For Gene Ontology analysis 
-library(ghibli) # For pretty colors
-library(ggplot2) # For plots (e.g. Volcano plot)
-pacman::p_load(here,  
-               tidyverse, 
-               janitor, # Cleaning column names  
-               scales, # Transform axis scales   
-               ggrepel) # Optimize plot label separation 
-library(GseaVis) # For nicer GSEA plot
+library(edgeR) # For differential expression calculation. We will create an edgeR object and use the package to normalize our data.
 
 # Read in the raw data and metadata ----
 ## Raw data
