@@ -1,0 +1,3 @@
+SampleID	Condition
+Minus_cre_p53mut	WT
+Plus_cre_p53mut	Mut
