@@ -6,13 +6,10 @@ library(edgeR) # For differential expression calculation. We will create an edge
 
 # Read in the raw data and metadata ----
 ## Raw data
-raw.data <- read.delim("../results/star_salmon/salmon.merged.gene_counts.tsv", check.names=FALSE, stringsAsFactors=FALSE,row.names="gene_id")
+raw.data <- read.delim("../results/star_salmon/salmon.merged.gene_counts.tsv", check.names=FALSE, stringsAsFactors=FALSE)
 ### View the raw data
 view(raw.data)
 str(raw.data)
-## Re-name the column headers to make downstream processing easier
-raw.data <- raw.data[c("gene_id","gene_name","Minus_cre_p53mut","Plus_cre_p53mut")]
-
 
 ## Metadata
 metadata <- read.delim("input/organoid_pilot_metadata.txt",check.names=FALSE, stringsAsFactors=FALSE)
@@ -29,8 +26,46 @@ table(metadata)
 #### We need to be cautious that we are setting the appropriate reference
 
 
-group <- factor(c("T","T_Tx"))
+# Setting model design, defining condition as the covariate of interest
+## Defining the grouping variable (condition)
+group <- factor(c("WT","Mut"))
 
+design <- model.matrix(~group)
+design.reduced <- matrix(1,2,1)
+dgList <- estimateGLMCommonDisp(data, design.reduced,
+                                method="deviance", robust = TRUE, subset=NULL)
+
+
+
+
+# Annotating with ENTREZ IDs to do GO and pathway enrichment
+
+# Need ENTREZ ID to be the row name, but cannot have duplicate row names (some genes have unique Ensembl IDs but not gene names/Entrez IDs)
+# Finding the Ensembl IDs currently in the database 
+idfound<-dgList$genes$gene_id %in% mappedRkeys(org.Mm.egENSEMBL)
+dgList<-dgList[idfound,]
+dim(dgList)
+
+# Then adding ENTREZ ID
+egENSEMBL<-toTable(org.Mm.egENSEMBL)
+head(egENSEMBL)
+
+m<-match(dgList$genes$gene_id, egENSEMBL$ensembl_id)
+dgList$genes$EntrezGene<-egENSEMBL$gene_id[m]
+head(dgList$genes)
+
+# Dropping duplcated genes (both gene names and Entrez IDs)
+o <- order(rowSums(dgList$counts), decreasing=TRUE)
+dgList <- dgList[o,]
+d <- duplicated(dgList$genes$gene_name)
+dgList.unique <- dgList[!d,]
+e <- duplicated(dgList.unique$genes$EntrezGene)
+dgList.unique <- dgList.unique[!e,]
+nrow(dgList.unique)
+
+# Making the Entrez ID the row name (and dropping duplicative data from EntrezGene column)
+rownames(dgList.unique$counts) <- rownames(dgList.unique$genes) <- dgList.unique$genes$EntrezGene
+dgList.unique$genes$EntrezGene <- NULL
 
 # Create edgeR Object ----
 # Create edgeR list object (called DGEList)
@@ -62,4 +97,4 @@ y$samples
 
 # Save the data ----
 ## Save the normalized data in RDS format
-saveRDS(y, file = "input/clean_data.rds")
+saveRDS(y, file = "input/normalized_data.rds")
