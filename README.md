@@ -3,6 +3,7 @@ Repo for housing the results from the RNA-seq of organoids from Konrad's thesis 
 
 Currently, this houses the results from the pilot experiment:
 - **Samples**
+  - Species: Mouse (Mus musculus)
   - `Sample 1` Wild-type (pre-Cre) for P53 mutant endometrial cancer (??)
   - `Sample 2` Mutant (plus-Cre) P53 endometrial cancer (??)
 - **Timeframe**
