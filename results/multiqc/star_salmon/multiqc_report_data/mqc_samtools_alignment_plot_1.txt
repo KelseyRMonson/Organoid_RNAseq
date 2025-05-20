@@ -1,0 +1,3 @@
+Sample	Mapped (with MQ>0)	MQ0
+Minus_cre_p53mut	149542925.0	844530.0
+Plus_cre_p53mut	120784978.0	566654.0

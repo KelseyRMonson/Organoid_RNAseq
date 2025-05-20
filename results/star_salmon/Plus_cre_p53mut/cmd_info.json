@@ -1,0 +1,10 @@
+{
+    "salmon_version": "1.10.1",
+    "geneMap": "Mus_musculus.GRCm39.dna_sm.primary_assembly.filtered.gtf",
+    "threads": "6",
+    "libType": "IU",
+    "targets": "genome.transcripts.fa",
+    "alignments": "Plus_cre_p53mut.Aligned.toTranscriptome.out.bam",
+    "output": "Plus_cre_p53mut",
+    "auxDir": "aux_info"
+}

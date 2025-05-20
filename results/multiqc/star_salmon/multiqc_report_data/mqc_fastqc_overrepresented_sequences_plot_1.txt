@@ -1,0 +1,5 @@
+Sample	Top overrepresented sequence	Sum of remaining overrepresented sequences
+Minus_cre_p53mut_1	1.598984191458178	0.0
+Minus_cre_p53mut_2	2.205551745451883	0.0
+Plus_cre_p53mut_1	4.162290699173476	0.13734013813565937
+Plus_cre_p53mut_2	5.162864460517619	0.0

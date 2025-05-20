@@ -1,0 +1,2 @@
+Name	Mean	Median	sd
+Minus_cre_p53mut	-59.9791844611058	-92.5	86.5827128951827

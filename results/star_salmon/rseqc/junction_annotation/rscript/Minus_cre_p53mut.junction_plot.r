@@ -1,0 +1,8 @@
+pdf("Minus_cre_p53mut.splice_events.pdf")
+events=c(0.7636646710155667,0.6609342182057575,98.4696714254105)
+pie(events,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing events",labels=c("partial_novel 1%","complete_novel 1%","known 98%"))
+dev.off()
+pdf("Minus_cre_p53mut.splice_junction.pdf")
+junction=c(21.497077387664113,17.45726246484441,61.04566014749148)
+pie(junction,col=c(2,3,4),init.angle=30,angle=c(60,120,150),density=c(70,70,70),main="splicing junctions",labels=c("partial_novel 21%","complete_novel 17%","known 61%"))
+dev.off()

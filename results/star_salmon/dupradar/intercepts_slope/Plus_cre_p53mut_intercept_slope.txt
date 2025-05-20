@@ -1,0 +1,2 @@
+Plus_cre_p53mut - dupRadar Int (duprate at low read counts): 0.119852191469286 
+Plus_cre_p53mut - dupRadar Sl (progression of the duplication rate): 1.40757057227689
