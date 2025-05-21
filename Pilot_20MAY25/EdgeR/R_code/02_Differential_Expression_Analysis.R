@@ -56,7 +56,7 @@ topKEGG(keg)
 
 
 ## Volcano plots ----
-# Results for DEGs -- defining up/down regulated genes
+### Results for DEGs -- defining up/down regulated genes ----
 res.sig <- topTags(lrt, n=nrow(lrt$table), adjust.method = "fdr")$table
 res.sig$topDE <- "NA"
 res.sig$topDE <- as.character(res.sig$topDE)
@@ -105,18 +105,20 @@ head(res.sig)
 
 # Good tutorial for customizing volcano: https://erikaduan.github.io/posts/2021-01-02-volcano-plots-with-ggplot2/ 
 
-# Highlighting specific genes on volcano
+### Highlighting specific genes on volcano ----
 
-## KM to pick up here tomorrow ## ----
+# I put the top DEGs (adjusted p-value <= 0.05) into Enrichr 
+# I am showing the genes in a few of the top pathways
 
-# Cytokine-cytokine receptor interaction pathway genes
-cytogenes <- c("ACVRL1","CXCL6","CSF3","CXCL8","CCL3L3","IL24","CXCR4","TNFRSF11B","CSF2RA","CXCL5","IL1RL1","CCL3","TNFSF11","CCL2","CCL18","IL10","IL11","IL33","TGFB2","CCL21","INHBA","IL17RB","BMP4","IL1A","CXCL10","CXCL11","IL6","CXCL12","IL1B","IL3RA","ACKR3")
+# Rap1 Signaling Pathway
+rap1path <- c("Vav3","Itgam","Itgb2","Pdgfb","Vegfb","Pard6g","Itgal","Thbs1","Gnai1","Adcy9","Plcb4",
+             "Akt3","Id1","Kit","Tln2","Rac2","Fgfr3","Fgfr2","Rapgef4")
 
-up_cyto_genes <- res.sig %>% filter(gene_name %in% cytogenes  & res.sig$topDE=="Up")
-down_cyto_genes <- res.sig %>% filter(gene_name %in% cytogenes  & res.sig$topDE=="Down")
+up_rap1_genes <- res.sig %>% filter(gene_name %in% rap1path  & res.sig$topDE=="Up")
+down_rap1_genes <- res.sig %>% filter(gene_name %in% rap1path  & res.sig$topDE=="Down")
 
-# Up/down cytokine genes
-updown_genes <- rbind(up_cyto_genes, down_cyto_genes)
+# Up/down Rap1 Signaling genes
+updown_rap1_genes <- rbind(up_rap1_genes, down_rap1_genes)
 
 ggplot(data = res.sig,
        aes(x = logFC,
@@ -125,12 +127,111 @@ ggplot(data = res.sig,
              alpha = 0.5, 
              shape = 16,
              size = 1) + 
-  geom_point(data = up_cyto_genes,
+  geom_point(data = up_rap1_genes,
              shape = 21,
              size = 2, 
              fill = "firebrick", 
              colour = "black") + # For upregulated genes
-  geom_point(data = down_cyto_genes,
+  geom_point(data = down_rap1_genes,
+             shape = 21,
+             size = 2, 
+             fill = "steelblue", 
+             colour = "black") + # For downregulated genes
+  geom_hline(yintercept = -log10(0.05),
+             linetype = "dashed") + 
+  geom_vline(xintercept = c(log2(0.5), log2(2)),
+             linetype = "dashed") +
+  geom_label_repel(data = updown_rap1_genes,   # Combine both up and down gene lists
+                   aes(label = gene_name), 
+                   force = 2,
+                   nudge_y = 1) + # Add labels last to appear as the top layer
+  scale_colour_manual(values = cols) + 
+  # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
+  #                    limits = c(-8, 8)) +
+  # scale_y_continuous(limits = c(0, 11)) +
+  labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
+       subtitle = "Significantly differentially expressed genes in KEGG 'Rap1 Signaling' pathway \n(adjusted pathway enrichment p-value=0.01)",
+       x = "log(fold change)",
+       y = "-log10(adjusted P-value)",
+       colour = "Expression change\nin WT Organoid") +
+  theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
+  theme(panel.border = element_rect(colour = "black", fill = NA, size= 0.5),    
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())
+
+
+# Chemokine Signaling Pathway
+chemokines <- c("Vav3","Ncf1","Ppbp","Cxcl2","Cxcl15","Gnai1","Prex1","Cxcl10","Pak1","Adcy9","Plcb4","Ccl6","Ccl5","Akt3","Cxcr2","Rac2","Ccl2")
+
+up_chemo_genes <- res.sig %>% filter(gene_name %in% chemokines  & res.sig$topDE=="Up")
+down_chemo_genes <- res.sig %>% filter(gene_name %in% chemokines  & res.sig$topDE=="Down")
+
+# Up/down Chemokine Signaling genes
+updown_chemo_genes <- rbind(up_chemo_genes, down_chemo_genes)
+
+ggplot(data = res.sig,
+       aes(x = logFC,
+           y = -log10(FDR))) + 
+  geom_point(aes(colour = topDE), 
+             alpha = 0.5, 
+             shape = 16,
+             size = 1) + 
+  geom_point(data = up_chemo_genes,
+             shape = 21,
+             size = 2, 
+             fill = "firebrick", 
+             colour = "black") + # For upregulated genes
+  geom_point(data = down_chemo_genes,
+             shape = 21,
+             size = 2, 
+             fill = "steelblue", 
+             colour = "black") + # For downregulated genes
+  geom_hline(yintercept = -log10(0.05),
+             linetype = "dashed") + 
+  geom_vline(xintercept = c(log2(0.5), log2(2)),
+             linetype = "dashed") +
+  geom_label_repel(data = updown_chemo_genes,   # Combine both up and down gene lists
+                   aes(label = gene_name), 
+                   force = 2,
+                   nudge_y = 1) + # Add labels last to appear as the top layer
+  scale_colour_manual(values = cols) + 
+  # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
+  #                    limits = c(-8, 8)) +
+  # scale_y_continuous(limits = c(0, 11)) +
+  labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
+       subtitle = "Significantly differentially expressed genes in WikiPathways 'Chemokine Signaling' pathway \n(adjusted pathway enrichment p-value=2.88E-03)",
+       x = "log(fold change)",
+       y = "-log10(adjusted P-value)",
+       colour = "Expression change\nin WT Organoid") +
+  theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
+  theme(panel.border = element_rect(colour = "black", fill = NA, size= 0.5),    
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())
+
+
+# Regulation of IGF Transport and Uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs)
+# Update genes
+igfbp <- c("Vav3","Ncf1","Ppbp","Cxcl2","Cxcl15","Gnai1","Prex1","Cxcl10","Pak1","Adcy9","Plcb4","Ccl6","Ccl5","Akt3","Cxcr2","Rac2","Ccl2")
+
+up_igfbp_genes <- res.sig %>% filter(gene_name %in% igfbp  & res.sig$topDE=="Up")
+down_igfbp_genes <- res.sig %>% filter(gene_name %in% igfbp  & res.sig$topDE=="Down")
+
+# Up/down Chemokine Signaling genes
+updown_igfbp_genes <- rbind(up_chemo_genes, down_chemo_genes)
+
+ggplot(data = res.sig,
+       aes(x = logFC,
+           y = -log10(FDR))) + 
+  geom_point(aes(colour = topDE), 
+             alpha = 0.5, 
+             shape = 16,
+             size = 1) + 
+  geom_point(data = up_chemo_genes,
+             shape = 21,
+             size = 2, 
+             fill = "firebrick", 
+             colour = "black") + # For upregulated genes
+  geom_point(data = down_chemo_genes,
              shape = 21,
              size = 2, 
              fill = "steelblue", 
@@ -147,57 +248,20 @@ ggplot(data = res.sig,
   # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
   #                    limits = c(-8, 8)) +
   # scale_y_continuous(limits = c(0, 11)) +
-  labs(title = "Gene expression changes comparing Lenvatinib-treated and untreated tumor tissue",
-       subtitle = "Significantly differentially expressed genes in KEGG 'Cytokine-cytokine receptor interaction' pathway (adjusted pathway enrichment p-value=1.09E-09)",
+  labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
+       subtitle = "Significantly differentially expressed genes in WikiPathways 'Chemokine Signaling' pathway \n(adjusted pathway enrichment p-value=2.88E-03)",
        x = "log(fold change)",
        y = "-log10(adjusted P-value)",
-       colour = "Expression change\nin treated tumor") +
-  theme_bw() + # Select theme with a white background  
+       colour = "Expression change\nin WT Organoid") +
+  theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
   theme(panel.border = element_rect(colour = "black", fill = NA, size= 0.5),    
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank())
 
-## Resized for figure
-ggplot(data = res.sig,
-       aes(x = logFC,
-           y = -log10(FDR))) + 
-  geom_point(aes(colour = topDE), 
-             alpha = 0.5, 
-             shape = 16,
-             size = 1) + 
-  geom_point(data = up_cyto_genes,
-             shape = 21,
-             size = 2, 
-             fill = "firebrick", 
-             colour = "black") + # For upregulated genes
-  geom_point(data = down_cyto_genes,
-             shape = 21,
-             size = 2, 
-             fill = "steelblue", 
-             colour = "black") + # For downregulated genes
-  geom_hline(yintercept = -log10(0.05),
-             linetype = "dashed") + 
-  geom_vline(xintercept = c(log2(0.5), log2(2)),
-             linetype = "dashed") +
-  geom_label_repel(data = updown_genes,   # Combine both up and down gene lists
-                   aes(label = gene_name, size = 30 ), 
-                   force = 4,
-                   nudge_y = 2,
-                   show.legend=F) + # Add labels last to appear as the top layer
-  scale_colour_manual(values = cols) + 
-  # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
-  #                    limits = c(-8, 8)) +
-  # scale_y_continuous(limits = c(0, 11)) +
-  labs(title = "DEGs comparing Lenvatinib-treated and untreated tumor",
-       subtitle = "KEGG 'Cytokine-cytokine receptor interaction' pathway (adj. p-value=1.09E-09)",
-       x = "log(fold change)",
-       y = "-log10(adjusted P-value)",
-       colour = "Expression change\nin treated tumor") +
-  theme_bw(base_size = 25) + # Select theme with a white background  
-  theme(panel.border = element_rect(colour = "black", fill = NA, size= 0.5),    
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank())
-## 1500 x 900
+
+
+
+
 
 ## IL-17 pathway genes
 IL17genes <- c("CXCL6","CSF3","CXCL8","MMP1","MMP3","PTGS2","MUC5B","MMP9","CXCL5","IL17RB","MUC5AC","CXCL10","MAPK11","IL6","IL1B","CCL2","S100A9","S100A8")
