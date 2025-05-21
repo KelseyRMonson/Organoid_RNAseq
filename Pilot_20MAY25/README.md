@@ -14,6 +14,9 @@ Results from initial pilot project, with RNA-seq alignment and quantification pe
   -   *Next up*: KM to complete EdgeR analysis in R
 
 ## Contents
-- Download [MultiQC](multiqc_report.html) html file to view the aggregated quality control results for the pipeline
-- Use the results from the [star_salmon](results/star_salmon) folder *(KM to confirm which file is being used downstream)*
-- Everything else is semi-optional, worry about these first.
+- **Pipeline QC:** Download [MultiQC](multiqc_report.html) html file to view the aggregated quality control results for the pipeline
+- **Quantified Reads:**
+  - Use the results from the [star_salmon](results/star_salmon) folder: *[salmon.merged.gene_counts.tsv](results/star_salmon/salmon.merged.gene_counts.tsv)*
+  - This is the input for differential expression analysis
+- **Differential expression analysis:** In the [edgeR](EdgeR) folder.
+- *Everything else is semi-optional, worry about these first.*
