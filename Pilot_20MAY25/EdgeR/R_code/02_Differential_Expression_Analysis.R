@@ -107,7 +107,7 @@ head(res.sig)
 
 ### Highlighting specific genes on volcano ----
 #### Top Genes ----
-# Rap1 Signaling Pathway
+# Top 15 differentially expressed genes (taken manually from results .csv file)
 topgenes <- c("Cldn2","Trf","Gpx3","Mmp7","Alb","Havcr1","Ccn2","Elapor1","Cpe","Dmbt1","Kctd12",
               "Obscn","Armcx3","Kcnj16","Inpp5d")
 
