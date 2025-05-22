@@ -97,7 +97,7 @@ ggplot(data=res.sig, aes(x=logFC, y=-log10(FDR), fill=topDE, size=topDE, alpha=t
        y = "-log10(adjusted P-value)",
        colour = "Expression \nchange") +
   theme_bw() + # Select theme with a white background  
-  theme(panel.border = element_rect(colour = "black", fill = NA, size= 0.5),    
+  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 0.5),    
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank())
 
@@ -114,48 +114,60 @@ topgenes <- c("Cldn2","Trf","Gpx3","Mmp7","Alb","Havcr1","Ccn2","Elapor1","Cpe",
 up_top_genes <- res.sig %>% filter(gene_name %in% topgenes  & res.sig$topDE=="Up")
 down_top_genes <- res.sig %>% filter(gene_name %in% topgenes  & res.sig$topDE=="Down")
 
-# Up/down Rap1 Signaling genes
+# Up/down genes
 updown_top_genes <- rbind(up_top_genes, down_top_genes)
 
-ggplot(data = res.sig,
-       aes(x = logFC,
-           y = -log10(FDR))) + 
-  geom_point(aes(colour = topDE), 
-             alpha = 0.5, 
-             shape = 16,
-             size = 1) + 
-  geom_point(data = up_top_genes,
-             shape = 21,
-             size = 2, 
-             fill = "firebrick", 
-             colour = "black") + # For upregulated genes
-  geom_point(data = down_top_genes,
-             shape = 21,
-             size = 2, 
-             fill = "steelblue", 
-             colour = "black") + # For downregulated genes
-  geom_hline(yintercept = -log10(0.05),
-             linetype = "dashed") + 
-  geom_vline(xintercept = c(log2(0.5), log2(2)),
-             linetype = "dashed") +
-  geom_label_repel(data = updown_top_genes,   # Combine both up and down gene lists
-                   aes(label = gene_name), 
-                   force = 2,
-                   nudge_y = 1) + # Add labels last to appear as the top layer
-  scale_colour_manual(values = cols) + 
-  # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
-  #                    limits = c(-8, 8)) +
-  # scale_y_continuous(limits = c(0, 11)) +
-  labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
-       subtitle = "Top 15 Differentially Expressed Genes",
-       x = "log(fold change)",
-       y = "-log10(adjusted P-value)",
-       colour = "Expression change\nin WT Organoid") +
-  theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
-  theme(panel.border = element_rect(colour = "black", fill = NA, size= 0.5),    
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank())
+# Create the plot
+topgenes_plot <- ggplot(data = res.sig,
+                       aes(x = logFC,
+                           y = -log10(FDR))) + 
+                  geom_point(aes(colour = topDE), 
+                             alpha = 0.5, 
+                             shape = 16,
+                             size = 1) + 
+                  geom_point(data = up_top_genes,
+                             shape = 21,
+                             size = 2, 
+                             fill = "firebrick", 
+                             colour = "black") + # For upregulated genes
+                  geom_point(data = down_top_genes,
+                             shape = 21,
+                             size = 2, 
+                             fill = "steelblue", 
+                             colour = "black") + # For downregulated genes
+                  geom_hline(yintercept = -log10(0.05),
+                             linetype = "dashed") + 
+                  geom_vline(xintercept = c(log2(0.5), log2(2)),
+                             linetype = "dashed") +
+                  geom_label_repel(data = updown_top_genes,   # Combine both up and down gene lists
+                                   aes(label = gene_name), 
+                                   force = 2,
+                                   nudge_y = 1) + # Add labels last to appear as the top layer
+                  scale_colour_manual(values = cols) + 
+                  # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
+                  #                    limits = c(-8, 8)) +
+                  # scale_y_continuous(limits = c(0, 11)) +
+                  labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
+                       subtitle = "Top 15 Differentially Expressed Genes",
+                       x = "log(fold change)",
+                       y = "-log10(adjusted P-value)",
+                       colour = "Expression change\nin WT Organoid") +
+                  theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
+                  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 0.5),    
+                        panel.grid.minor = element_blank(),
+                        panel.grid.major = element_blank())
+# View the plot
+topgenes_plot
 
+# Save the plot
+ggsave(
+  filename = paste0("volcanoplot_WTvsP53_top15DEGs_", format(Sys.Date(), "%Y-%m-%d"), ".pdf"), 
+  plot = topgenes_plot,
+  path = "output/figures/volcanoplots",
+  width = 11, 
+  height = 8,
+  dpi = 300,
+  create.dir = TRUE)
 
 #### Pathways ----
 # I put the top DEGs (adjusted p-value <= 0.05) into Enrichr 
@@ -171,7 +183,8 @@ down_rap1_genes <- res.sig %>% filter(gene_name %in% rap1path  & res.sig$topDE==
 # Up/down Rap1 Signaling genes
 updown_rap1_genes <- rbind(up_rap1_genes, down_rap1_genes)
 
-ggplot(data = res.sig,
+# Create the plot
+rap1_plot <- ggplot(data = res.sig,
        aes(x = logFC,
            y = -log10(FDR))) + 
   geom_point(aes(colour = topDE), 
@@ -206,10 +219,22 @@ ggplot(data = res.sig,
        y = "-log10(adjusted P-value)",
        colour = "Expression change\nin WT Organoid") +
   theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
-  theme(panel.border = element_rect(colour = "black", fill = NA, size= 0.5),    
+  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth= 0.5),    
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank())
 
+# View the plot
+rap1_plot
+
+# Save the plot
+ggsave(
+  filename = paste0("volcanoplot_WTvsP53_Rap1pathway_", format(Sys.Date(), "%Y-%m-%d"), ".pdf"), 
+  plot = rap1_plot,
+  path = "output/figures/volcanoplots",
+  width = 11, 
+  height = 8,
+  dpi = 300,
+  create.dir = TRUE)
 
 # Chemokine Signaling Pathway
 chemokines <- c("Vav3","Ncf1","Ppbp","Cxcl2","Cxcl15","Gnai1","Prex1","Cxcl10","Pak1","Adcy9","Plcb4","Ccl6","Ccl5","Akt3","Cxcr2","Rac2","Ccl2")
@@ -220,44 +245,58 @@ down_chemo_genes <- res.sig %>% filter(gene_name %in% chemokines  & res.sig$topD
 # Up/down Chemokine Signaling genes
 updown_chemo_genes <- rbind(up_chemo_genes, down_chemo_genes)
 
-ggplot(data = res.sig,
-       aes(x = logFC,
-           y = -log10(FDR))) + 
-  geom_point(aes(colour = topDE), 
-             alpha = 0.5, 
-             shape = 16,
-             size = 1) + 
-  geom_point(data = up_chemo_genes,
-             shape = 21,
-             size = 2, 
-             fill = "firebrick", 
-             colour = "black") + # For upregulated genes
-  geom_point(data = down_chemo_genes,
-             shape = 21,
-             size = 2, 
-             fill = "steelblue", 
-             colour = "black") + # For downregulated genes
-  geom_hline(yintercept = -log10(0.05),
-             linetype = "dashed") + 
-  geom_vline(xintercept = c(log2(0.5), log2(2)),
-             linetype = "dashed") +
-  geom_label_repel(data = updown_chemo_genes,   # Combine both up and down gene lists
-                   aes(label = gene_name), 
-                   force = 2,
-                   nudge_y = 1) + # Add labels last to appear as the top layer
-  scale_colour_manual(values = cols) + 
-  # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
-  #                    limits = c(-8, 8)) +
-  # scale_y_continuous(limits = c(0, 11)) +
-  labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
-       subtitle = "Significantly differentially expressed genes in WikiPathways 'Chemokine Signaling' pathway \n(adjusted pathway enrichment p-value=2.88E-03)",
-       x = "log(fold change)",
-       y = "-log10(adjusted P-value)",
-       colour = "Expression change\nin WT Organoid") +
-  theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
-  theme(panel.border = element_rect(colour = "black", fill = NA, size= 0.5),    
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank())
+# Create the plot
+chemokine_plot <- ggplot(data = res.sig,
+                       aes(x = logFC,
+                           y = -log10(FDR))) + 
+                  geom_point(aes(colour = topDE), 
+                             alpha = 0.5, 
+                             shape = 16,
+                             size = 1) + 
+                  geom_point(data = up_chemo_genes,
+                             shape = 21,
+                             size = 2, 
+                             fill = "firebrick", 
+                             colour = "black") + # For upregulated genes
+                  geom_point(data = down_chemo_genes,
+                             shape = 21,
+                             size = 2, 
+                             fill = "steelblue", 
+                             colour = "black") + # For downregulated genes
+                  geom_hline(yintercept = -log10(0.05),
+                             linetype = "dashed") + 
+                  geom_vline(xintercept = c(log2(0.5), log2(2)),
+                             linetype = "dashed") +
+                  geom_label_repel(data = updown_chemo_genes,   # Combine both up and down gene lists
+                                   aes(label = gene_name), 
+                                   force = 2,
+                                   nudge_y = 1) + # Add labels last to appear as the top layer
+                  scale_colour_manual(values = cols) + 
+                  # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
+                  #                    limits = c(-8, 8)) +
+                  # scale_y_continuous(limits = c(0, 11)) +
+                  labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
+                       subtitle = "Significantly differentially expressed genes in WikiPathways 'Chemokine Signaling' pathway \n(adjusted pathway enrichment p-value=2.88E-03)",
+                       x = "log(fold change)",
+                       y = "-log10(adjusted P-value)",
+                       colour = "Expression change\nin WT Organoid") +
+                  theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
+                  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth= 0.5),    
+                        panel.grid.minor = element_blank(),
+                        panel.grid.major = element_blank())
+
+# View the plot
+chemokine_plot
+
+# Save the plot
+ggsave(
+  filename = paste0("volcanoplot_WTvsP53_chemokinepathway_", format(Sys.Date(), "%Y-%m-%d"), ".pdf"), 
+  plot = chemokine_plot,
+  path = "output/figures/volcanoplots",
+  width = 11, 
+  height = 8,
+  dpi = 300,
+  create.dir = TRUE)
 
 
 # Regulation of IGF Transport and Uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs)
@@ -266,46 +305,58 @@ igfbp <- c("Rcn1","Sdc2","Alb","Tnc","Fn1","Igf2","Apoe","Prss23","Kng1")
 up_igfbp_genes <- res.sig %>% filter(gene_name %in% igfbp  & res.sig$topDE=="Up")
 down_igfbp_genes <- res.sig %>% filter(gene_name %in% igfbp  & res.sig$topDE=="Down")
 
-# Up/down Chemokine Signaling genes
-updown_igfbp_genes <- rbind(up_chemo_genes, down_chemo_genes)
+# Up/down IGFBP Signaling genes
+updown_igfbp_genes <- rbind(up_igfbp_genes, down_igfbp_genes)
 
-ggplot(data = res.sig,
-       aes(x = logFC,
-           y = -log10(FDR))) + 
-  geom_point(aes(colour = topDE), 
-             alpha = 0.5, 
-             shape = 16,
-             size = 1) + 
-  geom_point(data = up_chemo_genes,
-             shape = 21,
-             size = 2, 
-             fill = "firebrick", 
-             colour = "black") + # For upregulated genes
-  geom_point(data = down_chemo_genes,
-             shape = 21,
-             size = 2, 
-             fill = "steelblue", 
-             colour = "black") + # For downregulated genes
-  geom_hline(yintercept = -log10(0.05),
-             linetype = "dashed") + 
-  geom_vline(xintercept = c(log2(0.5), log2(2)),
-             linetype = "dashed") +
-  geom_label_repel(data = updown_genes,   # Combine both up and down gene lists
-                   aes(label = gene_name), 
-                   force = 2,
-                   nudge_y = 1) + # Add labels last to appear as the top layer
-  scale_colour_manual(values = cols) + 
-  # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
-  #                    limits = c(-8, 8)) +
-  # scale_y_continuous(limits = c(0, 11)) +
-  labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
-       subtitle = "Significantly differentially expressed genes in Reactome 'Regulation of IGF Transport and Uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs)' pathway \n(adjusted pathway enrichment p-value=2.18E-04)",
-       x = "log(fold change)",
-       y = "-log10(adjusted P-value)",
-       colour = "Expression change\nin WT Organoid") +
-  theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
-  theme(panel.border = element_rect(colour = "black", fill = NA, size= 0.5),    
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank())
+# Create the plot
+igfpb_plot <- ggplot(data = res.sig,
+                   aes(x = logFC,
+                       y = -log10(FDR))) + 
+              geom_point(aes(colour = topDE), 
+                         alpha = 0.5, 
+                         shape = 16,
+                         size = 1) + 
+              geom_point(data = up_igfbp_genes,
+                         shape = 21,
+                         size = 2, 
+                         fill = "firebrick", 
+                         colour = "black") + # For upregulated genes
+              geom_point(data = down_igfbp_genes,
+                         shape = 21,
+                         size = 2, 
+                         fill = "steelblue", 
+                         colour = "black") + # For downregulated genes
+              geom_hline(yintercept = -log10(0.05),
+                         linetype = "dashed") + 
+              geom_vline(xintercept = c(log2(0.5), log2(2)),
+                         linetype = "dashed") +
+              geom_label_repel(data = updown_igfbp_genes,   # Combine both up and down gene lists
+                               aes(label = gene_name), 
+                               force = 2,
+                               nudge_y = 1) + # Add labels last to appear as the top layer
+              scale_colour_manual(values = cols) + 
+              # scale_x_continuous(breaks = c(seq(-10, 10, 5)),
+              #                    limits = c(-8, 8)) +
+              # scale_y_continuous(limits = c(0, 11)) +
+              labs(title = "Gene expression changes comparing \nP53 Wild-type (pre-Cre) and P53 mutant (post-Cre) uterine horn organoids",
+                   subtitle = "Significantly differentially expressed genes in \nReactome 'Regulation of IGF Transport and Uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs)' pathway \n(adjusted pathway enrichment p-value=2.18E-04)",
+                   x = "log(fold change)",
+                   y = "-log10(adjusted P-value)",
+                   colour = "Expression change\nin WT Organoid") +
+              theme_bw(base_size = 12) + # Select theme with a white background, scale up font size slightly   
+              theme(panel.border = element_rect(colour = "black", fill = NA, linewidth= 0.5),    
+                    panel.grid.minor = element_blank(),
+                    panel.grid.major = element_blank())
 
+# View the plot
+igfpb_plot
 
+# Save the plot
+ggsave(
+  filename = paste0("volcanoplot_WTvsP53_IGFtransport_", format(Sys.Date(), "%Y-%m-%d"), ".pdf"), 
+  plot = igfpb_plot,
+  path = "output/figures/volcanoplots",
+  width = 11, 
+  height = 8,
+  dpi = 300,
+  create.dir = TRUE)
