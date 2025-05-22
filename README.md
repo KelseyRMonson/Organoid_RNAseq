@@ -11,4 +11,4 @@ Currently, this houses the results from the pilot experiment:
   -   RNA isolated and sent for sequencing on `10 April 2025`
   -   Sequencing returned `29 April 2025` (KM received download link `01 May 2025`)
   -   Nextflow [NF-Core RNA-seq](https://github.com/nf-core/rnaseq) pipeline run `20 May 2025`
-  -   *Next up*: KM completing edgeR analysis in R
+  -   Preliminary [edgeR](Pilot_20MAY25/EdgeR) analysis in R completed `22 May 2025`
